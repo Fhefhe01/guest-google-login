@@ -51,8 +51,9 @@ export const stageHtml = String.raw`<div class="stage">
         <div class="name">GLOBAL DEGEN LEADERBOARD</div>
         <div class="lb-you"><span>Alias</span><input id="nameInput" maxlength="16" placeholder="anonymous"><button id="nameSaveBtn">SAVE</button></div>
       </div>
-      <ol class="lb-list" id="leaderboardList"><li class="lb-empty">loading…</li></ol>
+      <ol class="lb-list" id="leaderboardList" hidden></ol>
     </section>
+
 
     <section class="reset-panel">
       <div class="reset-row"><div><div class="name">💀 GET RUGGED</div><div class="desc">Wipe the bag. Start the insanity again.</div></div><button id="resetBtn">RUG ME</button></div>

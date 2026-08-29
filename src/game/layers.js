@@ -726,15 +726,13 @@ export function initLayers() {
   window.tnbRenderPersonalityLeaderboard=render;
 
   // Prefer enriching a server-backed leaderboard. If none is present, provide a visual personality board.
-  setTimeout(()=>{
-    if(!enrichExisting()) render();
-  },350);
+  setTimeout(()=>{ enrichExisting(); },350);
 
   // Refresh when the app's visible score changes.
   let last=0;
   setInterval(()=>{
     const s=currentScore();
-    if(s!==last){last=s;const real=enrichExisting();if(!real)render();}
+    if(s!==last){last=s;enrichExisting();}
   },1500);
 })();
   /* ---- tnb-v8-mobile-teaser-runtime ---- */
@@ -783,7 +781,7 @@ export function initLayers() {
     document.querySelector('.tnb-live-lb')?.remove();
     const anchor=document.querySelector('.leaderboard-panel') || document.querySelector('main') || document.body;
     const wrap=document.createElement('section');wrap.className='tnb-live-lb';
-    wrap.innerHTML='<div class="tnb-live-lb-head"><div class="tnb-live-lb-title">LIVE LEADERBOARD</div><div class="tnb-live-state" data-live-state><i class="tnb-live-dot"></i><span>CONNECTING</span></div></div><ol class="tnb-live-list" data-live-list><li class="lb-empty">SYNCING GLOBAL DEGENS...</li></ol><div class="tnb-live-foot">SERVER-SIDE SCORE · REAL-TIME STREAM</div>';
+    wrap.innerHTML='<div class="tnb-live-lb-head"><div class="tnb-live-lb-title">LEADERBOARD // PERSONALITY MODE</div><div class="tnb-live-state" data-live-state><i class="tnb-live-dot"></i><span>CONNECTING</span></div></div><ol class="tnb-live-list" data-live-list><li class="lb-empty">SYNCING GLOBAL DEGENS...</li></ol><div class="tnb-live-foot">SERVER-SIDE SCORE · REAL-TIME STREAM</div>';
     anchor.appendChild(wrap);return wrap;
   }
   const wrap=mount();
