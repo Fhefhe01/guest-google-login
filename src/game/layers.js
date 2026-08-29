@@ -735,36 +735,6 @@ export function initLayers() {
     if(s!==last){last=s;enrichExisting();}
   },1500);
 })();
-  /* ---- tnb-v8-mobile-teaser-runtime ---- */
-(() => {
-  function add(){
-    if(document.querySelector('.tnb-mobile-teaser')) return;
-    const anchor=document.querySelector('footer,.footer,[data-footer]') || document.querySelector('main') || document.body;
-    const section=document.createElement('section');
-    section.className='tnb-mobile-teaser';
-    section.setAttribute('aria-label','TNB mobile apps coming soon');
-    section.innerHTML=`
-      <div class="tnb-mobile-kicker">THE CHAOS IS GOING MOBILE</div>
-      <div class="tnb-mobile-title">TNB MOBILE</div>
-      <div class="tnb-mobile-sub">PLAY ANYWHERE. TRUST NOBODY.</div>
-      <div class="tnb-mobile-platforms">
-        <div class="tnb-mobile-platform">
-          <div class="icon"></div>
-          <div><strong>APP STORE</strong><span>COMING SOON</span></div>
-        </div>
-        <div class="tnb-mobile-platform">
-          <div class="icon">▶</div>
-          <div><strong>GOOGLE PLAY</strong><span>COMING SOON</span></div>
-        </div>
-      </div>
-      <div class="tnb-mobile-soon">NO FAKE DOWNLOAD BUTTONS. JUST THE TEASER.</div>
-      <div class="tnb-mobile-note">MOBILE VERSION IN DEVELOPMENT · TNB</div>`;
-    anchor.appendChild(section);
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);
-  else add();
-  window.tnbAddMobileTeaser=add;
-})();
   /* ---- v9-live-leaderboard ---- */
 (() => {
   const API_BASE = window.TNB_API_BASE || '/api';
