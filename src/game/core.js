@@ -24,6 +24,10 @@ export function initGame() {
   let perClick = 1;
   let perSec = 0;
   let lastMilestone = 0;
+  // Milestone celebrations must never replay for progress that was already
+  // earned before this page load, so the first score we see only sets the
+  // baseline instead of firing sounds/shakes/text.
+  let milestoneBaselineSet = false;
   let playerId = window.tnbPlayerId || null;
   let nameLoadedOnce = false;
   let combo = 0;
