@@ -432,14 +432,14 @@ export function initLayers() {
 
     modal.querySelector('[data-share="copy"]').onclick=async()=>{
       const score=currentScore();
-      const text=`👁️ I just hit ${Number(score).toLocaleString()} $TNB\\nThey said I was a degen.\\nThey were right.\\n\\n#TNB #Solana`;
+      const text=`👁️ I just hit ${Number(score).toLocaleString()} $TNB\nThey said I was a degen.\nThey were right.\n\n#TNB #Solana`;
       try{await navigator.clipboard.writeText(text);status('FLEX TEXT COPIED')}
       catch(e){status('COPY NOT AVAILABLE — SELECT TEXT MANUALLY')}
     };
 
     modal.querySelector('[data-share="x"]').onclick=()=>{
       const score=currentScore();
-      const text=encodeURIComponent(`👁️ I just hit ${Number(score).toLocaleString()} $TNB\\nThey said I was a degen. They were right.\\n#TNB #Solana`);
+      const text=encodeURIComponent(`👁️ I just hit ${Number(score).toLocaleString()} $TNB\nThey said I was a degen. They were right.\n#TNB #Solana`);
       window.open('https://twitter.com/intent/tweet?text='+text,'_blank','noopener,noreferrer');
       status('OPENING X');
     };
@@ -616,7 +616,7 @@ export function initLayers() {
     const s=score(),m=moods[mood];
     if(b.dataset.share==='x'){
       e.preventDefault();e.stopImmediatePropagation();
-      const text=encodeURIComponent(`👁️ ${m.title} ${Number(s).toLocaleString()} $TNB\\n${m.sub}\\n${m.footer}\\n\\n#TNB #Solana`);
+      const text=encodeURIComponent(`👁️ ${m.title} ${Number(s).toLocaleString()} $TNB\n${m.sub}\n${m.footer}\n\n#TNB #Solana`);
       window.open('https://twitter.com/intent/tweet?text='+text,'_blank','noopener,noreferrer');
     }
   },true);
