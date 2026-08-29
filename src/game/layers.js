@@ -751,19 +751,30 @@ export function initLayers() {
     document.querySelector('.tnb-live-lb')?.remove();
     const anchor=document.querySelector('.leaderboard-panel') || document.querySelector('main') || document.body;
     const wrap=document.createElement('section');wrap.className='tnb-live-lb';
-    wrap.innerHTML='<div class="tnb-live-lb-head"><div class="tnb-live-lb-title">LEADERBOARD // PERSONALITY MODE</div><div class="tnb-live-state" data-live-state><i class="tnb-live-dot"></i><span>CONNECTING</span></div></div><ol class="tnb-live-list" data-live-list><li class="lb-empty">SYNCING GLOBAL DEGENS...</li></ol><div class="tnb-live-foot">SERVER-SIDE SCORE · REAL-TIME STREAM</div>';
+    wrap.innerHTML='<div class="tnb-live-lb-head"><div class="tnb-live-lb-title">LEADERBOARD // PERSONALITY MODE</div><div class="tnb-live-state" data-live-state><i class="tnb-live-dot"></i><span>CONNECTING</span></div></div><ol class="tnb-live-list" data-live-list><li class="lb-empty">SYNCING GLOBAL DEGENS...</li></ol><div class="tnb-live-pager" data-live-pager hidden><button type="button" class="tnb-live-page-btn" data-page-prev aria-label="Halaman sebelumnya">‹</button><span class="tnb-live-page-info" data-page-info>1 / 1</span><button type="button" class="tnb-live-page-btn" data-page-next aria-label="Halaman berikutnya">›</button></div><div class="tnb-live-foot">SERVER-SIDE SCORE · REAL-TIME STREAM</div>';
     anchor.appendChild(wrap);return wrap;
   }
   const wrap=mount();
   const list=wrap.querySelector('[data-live-list]'), state=wrap.querySelector('[data-live-state]');
+  const pager=wrap.querySelector('[data-live-pager]'), pageInfo=wrap.querySelector('[data-page-info]');
+  const PAGE_SIZE=5;
+  let page=0, cachedPlayers=[];
+  wrap.querySelector('[data-page-prev]').addEventListener('click',()=>{if(page>0){page--;render(cachedPlayers)}});
+  wrap.querySelector('[data-page-next]').addEventListener('click',()=>{if((page+1)*PAGE_SIZE<cachedPlayers.length){page++;render(cachedPlayers)}});
   function setState(mode,text){state.className='tnb-live-state '+mode;state.querySelector('span').textContent=text}
   function render(players){
     if(!Array.isArray(players))return;
-    const me=ownId();const name=ownName();
+    const me=ownId();
     const rows=players.slice(0,50);
+    cachedPlayers=rows;
+    const pages=Math.max(1,Math.ceil(rows.length/PAGE_SIZE));
+    if(page>=pages)page=pages-1;
+    pager.hidden=pages<=1;
+    pageInfo.textContent=(page+1)+' / '+pages;
     list.innerHTML='';
     if(!rows.length){list.innerHTML='<li class="lb-empty">NO DEGENS YET. BE THE FIRST.</li>';return}
-    rows.forEach((p,i)=>{
+    rows.slice(page*PAGE_SIZE,page*PAGE_SIZE+PAGE_SIZE).forEach((p,j)=>{
+      const i=page*PAGE_SIZE+j;
       const li=document.createElement('li');li.className='tnb-live-row'+(p.id===me?' tnb-live-you':'');
       const r=document.createElement('span');r.className='tnb-live-rank';r.textContent='#'+(i+1);
       const mid=document.createElement('div');const n=document.createElement('div');n.className='tnb-live-name';n.textContent=p.name||'Anonymous';const t=document.createElement('div');t.className='tnb-live-title';t.textContent=titleFor(p.score)+(p.id===me?' · YOU':'');mid.append(n,t);
