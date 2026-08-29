@@ -24,6 +24,10 @@ export function initGame() {
   let perClick = 1;
   let perSec = 0;
   let lastMilestone = 0;
+  // Milestone celebrations must never replay for progress that was already
+  // earned before this page load, so the first score we see only sets the
+  // baseline instead of firing sounds/shakes/text.
+  let milestoneBaselineSet = false;
   let playerId = window.tnbPlayerId || null;
   let nameLoadedOnce = false;
   let combo = 0;
@@ -125,7 +129,12 @@ export function initGame() {
   */
   function checkMilestone(){
     const current = Math.floor(points);
+    // Before the first server sync we don't know the real score yet, so
+    // celebrating anything would be a false positive.
+    if(!milestoneBaselineSet) return;
     if(current <= lastMilestone) return;
+
+
 
     const next100 = Math.ceil((lastMilestone + 1) / 100) * 100;
     if(current >= next100){
@@ -454,6 +463,14 @@ export function initGame() {
     if(!nameLoadedOnce){
       nameInput.value = (state.name && state.name !== 'Anonymous') ? state.name : '';
       nameLoadedOnce = true;
+    }
+
+    // Server state is "already earned" progress: baseline the milestone
+    // tracker to it the first time so a refresh doesn't replay every
+    // crack/breakthrough sound and text from 0 up to the current score.
+    if(!milestoneBaselineSet){
+      milestoneBaselineSet = true;
+      lastMilestone = Math.floor(Math.max(0, points) / 100) * 100;
     }
 
     renderPanel();
