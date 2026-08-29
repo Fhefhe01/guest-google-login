@@ -103,7 +103,24 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      tnb_buy: { Args: { _upgrade_id: string }; Returns: Json }
+      tnb_click: { Args: { _taps?: number }; Returns: Json }
+      tnb_leaderboard: {
+        Args: { _limit?: number }
+        Returns: {
+          id: string
+          name: string
+          score: number
+        }[]
+      }
+      tnb_reset: { Args: never; Returns: Json }
+      tnb_set_alias: { Args: { _alias: string }; Returns: Json }
+      tnb_state: { Args: never; Returns: Json }
+      tnb_state_json: { Args: { _uid: string }; Returns: Json }
+      tnb_stats: {
+        Args: { _combo: number; _critical: number; _perfect: number }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
