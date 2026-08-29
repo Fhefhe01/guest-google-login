@@ -1,24 +1,105 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
+import type { Session } from "@supabase/supabase-js";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable/index";
+import { AuthGate } from "@/components/AuthGate";
+import { stageHtml } from "@/game/markup";
+import "@/game/tnb.css";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "$TNB Clicker — Trust Nobody Protocol" },
+      {
+        name: "description",
+        content:
+          "Tap the eye, farm $TNB, buy degen upgrades and climb the live global leaderboard. Guest mode or Google sign-in, cloud-saved.",
+      },
+      { property: "og:title", content: "$TNB Clicker — Trust Nobody Protocol" },
+      {
+        property: "og:description",
+        content:
+          "Tap the eye, farm $TNB, buy degen upgrades and climb the live global leaderboard.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  const [session, setSession] = useState<Session | null>(null);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setReady(true);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, next) => {
+      setSession(next);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  if (!ready) {
+    return <div className="tnb-boot">booting the protocol…</div>;
+  }
+
+  if (!session) {
+    return <AuthGate />;
+  }
+
+  return <GameStage session={session} />;
+}
+
+function GameStage({ session }: { session: Session }) {
+  const started = useRef(false);
+  const isGuest = !session.user.email;
+
+  useEffect(() => {
+    if (started.current) return;
+    started.current = true;
+    // The signed-in user is the player identity used by the game runtime.
+    (window as unknown as { tnbPlayerId?: string }).tnbPlayerId = session.user.id;
+    Promise.all([import("@/game/core.js"), import("@/game/layers.js")]).then(
+      ([core, layers]) => {
+        core.initGame();
+        layers.initLayers();
+      },
+    );
+  }, [session.user.id]);
+
+  async function signOut() {
+    await supabase.auth.signOut();
+    window.location.reload();
+  }
+
+  async function linkGoogle() {
+    await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+  }
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <>
+      <div className="tnb-account-bar">
+        <span className="tnb-account-who">
+          {isGuest ? "GUEST SESSION" : (session.user.email ?? "GOOGLE ACCOUNT")}
+        </span>
+        <span className="tnb-account-actions">
+          {isGuest ? (
+            <button type="button" onClick={linkGoogle}>
+              SAVE WITH GOOGLE
+            </button>
+          ) : null}
+          <button type="button" onClick={signOut}>
+            SIGN OUT
+          </button>
+        </span>
+      </div>
+      <div dangerouslySetInnerHTML={{ __html: stageHtml }} />
+    </>
   );
 }
