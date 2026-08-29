@@ -449,6 +449,8 @@ export function initGame() {
       });
     });
 
+    upgrades.sort((a,b)=> a.cost - b.cost);
+
     if(!nameLoadedOnce){
       nameInput.value = (state.name && state.name !== 'Anonymous') ? state.name : '';
       nameLoadedOnce = true;
