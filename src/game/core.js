@@ -466,6 +466,14 @@ export function initGame() {
       nameLoadedOnce = true;
     }
 
+    // Server state is "already earned" progress: baseline the milestone
+    // tracker to it the first time so a refresh doesn't replay every
+    // crack/breakthrough sound and text from 0 up to the current score.
+    if(!milestoneBaselineSet){
+      milestoneBaselineSet = true;
+      lastMilestone = Math.floor(Math.max(0, points) / 100) * 100;
+    }
+
     renderPanel();
     updateScore();
   }
