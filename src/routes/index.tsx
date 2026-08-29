@@ -65,13 +65,32 @@ function GameStage({ session }: { session: Session }) {
     started.current = true;
     // The signed-in user is the player identity used by the game runtime.
     (window as unknown as { tnbPlayerId?: string }).tnbPlayerId = session.user.id;
-    Promise.all([import("@/game/core.js"), import("@/game/layers.js")]).then(
-      ([core, layers]) => {
-        core.initGame();
-        layers.initLayers();
-      },
-    );
-  }, [session.user.id]);
+    void (async () => {
+      // Google players get their account name as the default alias.
+      const meta = session.user.user_metadata as Record<string, unknown>;
+      const googleName =
+        (meta['full_name'] as string) ||
+        (meta['name'] as string) ||
+        (session.user.email ? session.user.email.split("@")[0] : "");
+      if (googleName) {
+        try {
+          const current = await api.state();
+          if (!current?.name || current.name.toLowerCase() === "anonymous") {
+            await api.setAlias(googleName.slice(0, 16));
+          }
+        } catch {
+          /* alias seeding is best-effort */
+        }
+      }
+      const [core, layers] = await Promise.all([
+        import("@/game/core.js"),
+        import("@/game/layers.js"),
+      ]);
+      core.initGame();
+      layers.initLayers();
+    })();
+  }, [session.user.id, session.user.email, session.user.user_metadata]);
+
 
   async function signOut() {
     await supabase.auth.signOut();
