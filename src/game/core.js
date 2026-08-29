@@ -129,12 +129,11 @@ export function initGame() {
   */
   function checkMilestone(){
     const current = Math.floor(points);
-    if(!milestoneBaselineSet){
-      milestoneBaselineSet = true;
-      lastMilestone = Math.floor(Math.max(0, current) / 100) * 100;
-      return;
-    }
+    // Before the first server sync we don't know the real score yet, so
+    // celebrating anything would be a false positive.
+    if(!milestoneBaselineSet) return;
     if(current <= lastMilestone) return;
+
 
 
     const next100 = Math.ceil((lastMilestone + 1) / 100) * 100;
