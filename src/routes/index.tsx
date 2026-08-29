@@ -5,7 +5,9 @@ import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { AuthGate } from "@/components/AuthGate";
+import * as api from "@/game/api";
 import { stageHtml } from "@/game/markup";
+
 import "@/game/tnb.css";
 
 export const Route = createFileRoute("/")({
