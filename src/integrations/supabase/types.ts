@@ -14,7 +14,90 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      players: {
+        Row: {
+          best_combo: number
+          created_at: string
+          critical_taps: number
+          owned: Json
+          perfect_taps: number
+          score: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          best_combo?: number
+          created_at?: string
+          critical_taps?: number
+          owned?: Json
+          perfect_taps?: number
+          score?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          best_combo?: number
+          created_at?: string
+          critical_taps?: number
+          owned?: Json
+          perfect_taps?: number
+          score?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          alias: string
+          created_at: string
+          id: string
+          is_guest: boolean
+        }
+        Insert: {
+          alias?: string
+          created_at?: string
+          id: string
+          is_guest?: boolean
+        }
+        Update: {
+          alias?: string
+          created_at?: string
+          id?: string
+          is_guest?: boolean
+        }
+        Relationships: []
+      }
+      upgrades: {
+        Row: {
+          base_cost: number
+          growth: number
+          id: string
+          name: string
+          per_click: number
+          per_sec: number
+          sort_order: number
+        }
+        Insert: {
+          base_cost: number
+          growth?: number
+          id: string
+          name: string
+          per_click?: number
+          per_sec?: number
+          sort_order?: number
+        }
+        Update: {
+          base_cost?: number
+          growth?: number
+          id?: string
+          name?: string
+          per_click?: number
+          per_sec?: number
+          sort_order?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
