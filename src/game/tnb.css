@@ -542,6 +542,15 @@ font-size:7px;letter-spacing:.08em;margin-top:3px}
 .tnb-gate-card{width:min(100% - 24px,420px);margin:0}
 .tnb-auth-error{margin-top:10px;font-size:11px;color:var(--red);letter-spacing:.05em}
 .tnb-account-bar{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:10px;width:min(100% - 28px,760px);margin:14px auto 0;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(8,13,21,.8);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.tnb-account-actions{display:flex;gap:8px}
-.tnb-account-bar button{cursor:pointer;background:rgba(53,232,255,.1);border:1px solid rgba(53,232,255,.35);color:var(--text);border-radius:999px;padding:6px 12px;font:inherit;letter-spacing:.1em}
+.tnb-account-who{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tnb-account-actions{display:flex;gap:8px;flex-shrink:0}
+.tnb-account-bar button{cursor:pointer;background:rgba(53,232,255,.1);border:1px solid rgba(53,232,255,.35);color:var(--text);border-radius:999px;padding:6px 12px;font:inherit;letter-spacing:.1em;white-space:nowrap}
 .tnb-account-bar button:hover{background:rgba(53,232,255,.2)}
+@media(max-width:600px){
+  .tnb-account-bar{flex-wrap:wrap;border-radius:18px;padding:10px 12px;gap:8px;font-size:9px}
+  .tnb-account-who{width:100%;text-align:center}
+  .tnb-account-actions{width:100%;justify-content:center;flex-wrap:wrap}
+  .topbar{flex-wrap:wrap;gap:8px}
+  .hype-top{flex-wrap:wrap}
+  .reset-row{flex-wrap:wrap}
+}
